@@ -4,6 +4,9 @@ WORKDIR /app
 
 COPY requirements.txt /app
 
+RUN apt-get update && \
+    apt-get install -y gcc python3-dev
+
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /app
