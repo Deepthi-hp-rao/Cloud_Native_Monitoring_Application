@@ -1,18 +1,32 @@
-FROM python:3.12.0b4-slim
+#base image
+FROM python:3.11-slim
 
-WORKDIR /app
+#directory where the conatiner work
+WORKDIR /app 
 
-COPY requirements.txt /app
+#req file inside /app so that container should have all the dependencies
+COPY requirements.txt /app 
 
+# Install development tools and headers
 RUN apt-get update && \
-    apt-get install -y gcc python3-dev
+    apt-get install -y gcc python3-dev && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --no-cache-dir -r requirements.txt
+#instal all the dependencies in req file
+RUN pip3 install --no-cache-dir -r requirements.txt 
 
+#to copy everything in clo_nat_mon dir to the /app dir
 COPY . /app
 
+#even Running this appl in docker container it works fine, which is not restricting appl
 ENV FLASK_RUN_HOST=0.0.0.0
 
-EXPOSE 9001
+#Expose port 18080 for web traffic
+EXPOSE 18080 
 
-CMD ["flask", "run"]
+#Define the command to run when the container starts
+CMD ["flask", "run", "--port=18080"]
+
+# ENTRYPOINT ["python"]
+
+# CMD ["app.py"]
